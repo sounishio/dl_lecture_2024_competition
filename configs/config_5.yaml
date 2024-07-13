@@ -8,6 +8,8 @@ seed: 1234
 use_wandb: False
 
 data_dir: /content/
+image_dir: /content/Images/
+image_paths_file: /content/
 
 # Evaluation
 model_path: 

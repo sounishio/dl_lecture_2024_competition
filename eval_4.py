@@ -1,19 +1,21 @@
-import os
+import os, sys
 import numpy as np
 import torch
 import torch.nn.functional as F
 from torchmetrics import Accuracy
 import hydra
 from omegaconf import DictConfig
+import wandb
 from termcolor import cprint
 from tqdm import tqdm
 
-from src.datasets_4th import ThingsMEGDataset
-from src.models_4 import BasicConvClassifier
+from src.datasets import ThingsMEGDataset
+from src.models import BasicConvClassifier
 from src.utils import set_seed
 
+
 @torch.no_grad()
-@hydra.main(version_base=None, config_path="configs", config_name="config_4")
+@hydra.main(version_base=None, config_path="configs", config_name="config")
 def run(args: DictConfig):
     set_seed(args.seed)
     savedir = os.path.dirname(args.model_path)
@@ -39,12 +41,13 @@ def run(args: DictConfig):
     # ------------------ 
     preds = [] 
     model.eval()
-    for X, _, subject_idxs in tqdm(test_loader, desc="Validation"):
-        preds.append(model(X.to(args.device), None).detach().cpu())
+    for X, subject_idxs in tqdm(test_loader, desc="Validation"):        
+        preds.append(model(X.to(args.device)).detach().cpu())
         
     preds = torch.cat(preds, dim=0).numpy()
-    np.save(os.path.join(savedir, "submission.npy"), preds)
+    np.save(os.path.join(savedir, "submission"), preds)
     cprint(f"Submission {preds.shape} saved at {savedir}", "cyan")
+
 
 if __name__ == "__main__":
     run()
