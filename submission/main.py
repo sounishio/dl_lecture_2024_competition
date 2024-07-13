@@ -9,11 +9,11 @@ import wandb
 from termcolor import cprint
 from tqdm import tqdm
 
-from src.datasets_5 import ThingsMEGDataset
-from src.models_5 import BasicTransformerClassifier
+from src.datasets import ThingsMEGDataset
+from src.models import BasicTransformerClassifier
 from src.utils import set_seed
 
-@hydra.main(version_base=None, config_path="configs", config_name="config_5")
+@hydra.main(version_base=None, config_path="configs", config_name="config")
 def run(args: DictConfig):
     set_seed(args.seed)
     logdir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
